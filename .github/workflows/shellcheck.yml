@@ -1,0 +1,37 @@
+# This is a basic workflow to run shellcheck on all shell files in the repository
+
+name: ShellCheck
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This job runs shellcheck on all shell files in the repository
+  shellcheck:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: Run ShellCheck
+        run: |
+          # Find all shell files in the repository and store them in a variable
+          sh_files=$(find . -type f -name '*.sh')
+          # Run shellcheck on each file and print the output
+          for file in $sh_files; do
+            echo "Running shellcheck on $file"
+            shellcheck "$file"
+          done
