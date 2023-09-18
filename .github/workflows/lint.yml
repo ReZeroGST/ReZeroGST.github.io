@@ -1,0 +1,41 @@
+# This is a basic workflow to run proselint or write-good on all markdown files in the repository
+
+name: Lint
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This job runs proselint or write-good on all markdown files in the repository
+  lint:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: Run proselint or write-good
+        run: |
+          # Install proselint or write-good using pip
+          pip install proselint # or pip install write-good
+
+          # Find all markdown files in the repository and store them in a variable
+          md_files=$(find . -type f -name '*.md')
+
+          # Run proselint or write-good on each file and print the output
+          for file in $md_files; do
+            echo "Running proselint or write-good on $file"
+            proselint "$file" # or write-good "$file"
+          done
